@@ -1,13 +1,15 @@
 package com.App1.myapplication
 
+import android.content.ActivityNotFoundException
 import androidx.appcompat.app.AppCompatActivity
-import android.widget.EditText
 import android.os.Bundle
-import android.widget.Toast
 import android.content.Intent
+import android.provider.MediaStore
+import android.graphics.Bitmap
+import android.os.Build
 import android.view.View
-import android.widget.Button
-
+import android.widget.*
+import androidx.activity.result.contract.ActivityResultContracts
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
     private var firstName: String? = null
@@ -15,11 +17,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private var submitButton: Button? = null
     private var viewFirstName: EditText? = null
     private var viewLastName: EditText? = null
+    private var pictureButton: Button? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         submitButton = findViewById(R.id.button)
         submitButton!!.setOnClickListener(this)
+        pictureButton = findViewById(R.id.button_2)
+        pictureButton!!.setOnClickListener(this)
+
     }
 
     override fun onClick(view: View) {
@@ -49,7 +55,25 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     this.startActivity(messageIntent)
                 }
             }
+            R.id.button_2 -> {
+                val pictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                try{
+                    startActivityForResult(pictureIntent,100)
+                }catch (e: ActivityNotFoundException){
+                Toast.makeText(this,"Error: "+ e.localizedMessage,Toast.LENGTH_SHORT)
+                }
+            }
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == 100 && resultCode == RESULT_OK){
+            val viewImage : ImageView = findViewById(R.id.image_1)
+            val bitmap = data?.extras?.get("data") as Bitmap
+            viewImage.setImageBitmap(bitmap)
+        }
+
     }
 
 }

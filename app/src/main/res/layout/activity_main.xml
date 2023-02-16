@@ -62,4 +62,12 @@
         android:layout_marginTop="20dp"
         android:text="Take a picture" />
 
+    <ImageView
+        android:id="@+id/image_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/button_2"
+        android:layout_below="@+id/linearlayout_data"
+        />
+
 </RelativeLayout>
